@@ -16,7 +16,6 @@ def reqSmali(inpath,outpath,stuta):
     for i, file in enumerate(files):
         tup=''
         fullpath = os.path.join(inpath, file+"\\smali")
-        filesdir=[]
         list = list_all_files(fullpath)  # 列出文件夹下所有的目录与文件
         # print(list_all_files(fullpath)[0])
         m = '(?<=method public ).*?(?=\()'  # api方法正则
@@ -27,16 +26,17 @@ def reqSmali(inpath,outpath,stuta):
                     tup = tup + ''.join(l.rstrip('\n').rstrip().split('\t'))
         pattern4 = re.compile(m)
         methodContext=pattern4.findall(tup)
-        delList=["constructor <init>","onReceive","onCreate"]
-        for i in range(len(delList)):
-           while delList[i] in methodContext:
-              methodContext.remove(delList[i])
-
+        delmethod=["constructor <init>","onReceive","onCreate"]#去掉部分构造方法
+        for i in range(len(delmethod)):
+           while delmethod[i] in methodContext:
+              methodContext.remove(delmethod[i])
+        delstr=["static","final","abstract"]#去掉部分限定字符
         for i in range(len(methodContext)):
-            methodContext[i]=str(methodContext[i]).replace("static","").strip()
-            print(methodContext[i])
+            for j in range(len(delstr)):
+               methodContext[i]=str(methodContext[i]).replace(delstr[j],"").strip()
+            # print(methodContext[i])
         dict_writer.writerow({"filename": file,"method":methodContext})
-        print(file+">>>>"+tup)
+        # print(file+">>>>"+tup)
     csvFile.close()
 
 def list_all_files(rootdir):
@@ -56,8 +56,7 @@ outpath="./data.csv"
 # 恶意软件样本
 malware_root = ".\\smali\\malware"
 reqSmali(malware_root, outpath, 0)
-# reqPer(malware_root, outpath, 0)
 
 # 正常软件样本
 benign_root = ".\\smali\\benign"
-# reqPer(benign_root, "./smali/benign", 1)
+# reqSmali(benign_root,outpath, 1)
