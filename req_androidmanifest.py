@@ -25,7 +25,7 @@ def reqPer(inpath,outpath,stuta):
         pattern1 = re.compile(p)
         pattern2 = re.compile(i)
         pattern3 = re.compile(h)
-        dict_writer.writerow({"reqpermission":file,"reqpermission": pattern1.findall(tup), "intent": pattern2.findall(tup), "hardfeature": pattern3.findall(tup),"result":stuta})
+        dict_writer.writerow({"filename":file,"reqpermission": pattern1.findall(tup), "intent": pattern2.findall(tup), "hardfeature": pattern3.findall(tup),"result":stuta})
     csvFile.close()
 
 
@@ -38,4 +38,4 @@ reqPer(malware_root, outpath, 0)
 
 # 正常软件样本
 benign_root = ".\\smali\\benign"
-reqPer(benign_root, "./smali/benign", 1)
+# reqPer(benign_root, "./smali/benign", 1)

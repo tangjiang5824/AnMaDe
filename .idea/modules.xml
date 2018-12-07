@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/AndroidMalwareDection.iml" filepath="$PROJECT_DIR$/.idea/AndroidMalwareDection.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AnMaDe.iml" filepath="$PROJECT_DIR$/.idea/AnMaDe.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../AndroidMalwareDecti/.idea/AndroidMalwareDecti.iml" filepath="$PROJECT_DIR$/../AndroidMalwareDecti/.idea/AndroidMalwareDecti.iml" />
     </modules>
   </component>
 </project>

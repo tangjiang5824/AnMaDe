@@ -5,38 +5,39 @@
 import os
 import re
 import csv
+import string
 
 def reqSmali(inpath,outpath,stuta):
     files = os.listdir(inpath)
-    # rows = ["filename","senApi","result"]
-    # csvFile = open(outpath, "w")
-    # dict_writer = csv.DictWriter(csvFile, rows)
-    # dict_writer.writeheader()
+    rows = ["filename","method"]
+    csvFile = open(outpath, "w")
+    dict_writer = csv.DictWriter(csvFile, rows)
+    dict_writer.writeheader()
     for i, file in enumerate(files):
         tup=''
         fullpath = os.path.join(inpath, file+"\\smali")
         filesdir=[]
-        list = os.listdir(fullpath)  # 列出文件夹下所有的目录与文件
+        list = list_all_files(fullpath)  # 列出文件夹下所有的目录与文件
+        # print(list_all_files(fullpath)[0])
+        m = '(?<=method public ).*?(?=\()'  # api方法正则
         for i in range(0, len(list)):
-            path = os.path.join(fullpath, list[i])
-            if os.path.isdir(path):
-                filesdir.extend(list_all_files(path))
-            if os.path.isfile(path):
-                with open(path, 'r', encoding='UTF-8') as f:
-                    for l in f:
-                        tup = tup + ''.join(l.rstrip('\n').rstrip().split('\t'))
-        print(">>>>"+tup)
+            path = list[i]
+            with open(path, 'r', encoding='UTF-8') as f:
+                for l in f:
+                    tup = tup + ''.join(l.rstrip('\n').rstrip().split('\t'))
+        pattern4 = re.compile(m)
+        methodContext=pattern4.findall(tup)
+        delList=["constructor <init>","onReceive","onCreate"]
+        for i in range(len(delList)):
+           while delList[i] in methodContext:
+              methodContext.remove(delList[i])
 
-
-
-    #     p='(?<=uses-permission android:name=").*?(?=")' #请求权限正则
-    #     i='(?<=action android:name=").*?(?=")'   #Intent正则
-    #     h='(?<=uses-feature=").*?(?=")'    #硬件特征正则
-    #     pattern1 = re.compile(p)
-    #     pattern2 = re.compile(i)
-    #     pattern3 = re.compile(h)
-    #     dict_writer.writerow({"reqpermission": pattern1.findall(tup), "intent": pattern2.findall(tup), "hardfeature": pattern3.findall(tup),"result":stuta})
-    # csvFile.close()
+        for i in range(len(methodContext)):
+            methodContext[i]=str(methodContext[i]).replace("static","").strip()
+            print(methodContext[i])
+        dict_writer.writerow({"filename": file,"method":methodContext})
+        print(file+">>>>"+tup)
+    csvFile.close()
 
 def list_all_files(rootdir):
     import os
